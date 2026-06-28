@@ -1,0 +1,84 @@
+services:
+  # ---------------------------------------------------------------------------
+  # API FastAPI
+  # ---------------------------------------------------------------------------
+  api:
+    build: .
+    container_name: denuncias_api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017
+      - MINIO_ENDPOINT=minio:9000
+    depends_on:
+      mongo:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - denuncias_net
+    volumes:
+      - ./app:/app/app
+      - ./scripts:/app/scripts
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # MongoDB
+  # ---------------------------------------------------------------------------
+  mongo:
+    image: mongo:latest
+    container_name: denuncias_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - denuncias_net
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # MinIO (S3-compatible object storage)
+  # ---------------------------------------------------------------------------
+  minio:
+    image: minio/minio:latest
+    container_name: denuncias_minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"   # API S3
+      - "9001:9001"   # Console web
+    env_file:
+      - .env
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ACCESS_KEY}
+      - MINIO_ROOT_PASSWORD=${MINIO_SECRET_KEY}
+    volumes:
+      - minio_data:/data
+    networks:
+      - denuncias_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+# -----------------------------------------------------------------------------
+# Volumes persistentes
+# -----------------------------------------------------------------------------
+volumes:
+  mongo_data:
+  minio_data:
+
+# -----------------------------------------------------------------------------
+# Rede interna — os serviços comunicam-se pelos nomes (mongo, minio, api)
+# -----------------------------------------------------------------------------
+networks:
+  denuncias_net:
+    driver: bridge

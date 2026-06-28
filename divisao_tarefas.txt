@@ -1,0 +1,92 @@
+================================================================================
+  SISTEMA DE GERENCIAMENTO DE DENÚNCIAS URBANAS
+  Divisão de Tarefas — Trabalho Prático de Persistência
+================================================================================
+
+Integrante 1: Francisco Gabriel da Silva Lima
+Integrante 2: ______________________________
+Integrante 3: ______________________________
+
+--------------------------------------------------------------------------------
+INTEGRANTE 1 — Infraestrutura, Modelos e Configuração
+--------------------------------------------------------------------------------
+
+Tarefas realizadas:
+[ ] Configuração do pyproject.toml com todas as dependências (uv)
+[ ] Criação do Dockerfile da API
+[ ] Criação do docker-compose.yml (serviços: api, mongo, minio)
+[ ] Configuração das variáveis de ambiente (.env.example)
+[ ] Modelagem dos documentos Beanie:
+    [ ] User (usuarios)
+    [ ] Category (categorias)
+    [ ] ComplaintStatus (complaint_statuses)
+    [ ] Location (embedded na Denúncia)
+    [ ] Documento (documentos) — com todos os campos obrigatórios
+[ ] Configuração do banco de dados (app/core/database.py)
+[ ] Configuração central (app/core/config.py)
+
+Observações:
+___________________________________________________________________________
+___________________________________________________________________________
+
+--------------------------------------------------------------------------------
+INTEGRANTE 2 — Endpoints de Denúncias, Documentos e Serviço MinIO
+--------------------------------------------------------------------------------
+
+Tarefas realizadas:
+[ ] Implementação do MinioService (upload, download, delete, presigned URL)
+[ ] Endpoints de Denúncia (CRUD completo):
+    [ ] POST /denuncias/
+    [ ] GET  /denuncias/ (paginado, com filtros)
+    [ ] GET  /denuncias/{id}
+    [ ] PUT  /denuncias/{id}
+    [ ] DELETE /denuncias/{id}
+[ ] Endpoints de Documentos:
+    [ ] POST /denuncias/{id}/documents (upload MinIO + metadata MongoDB)
+    [ ] GET  /denuncias/{id}/documents (paginado)
+    [ ] GET  /documents/{document_id}
+    [ ] GET  /documents/{document_id}/download
+    [ ] PUT  /documents/{document_id}
+    [ ] DELETE /documents/{document_id}
+[ ] Implementação do main.py (lifespan, CORS, tratamento global de erros)
+
+Observações:
+___________________________________________________________________________
+___________________________________________________________________________
+
+--------------------------------------------------------------------------------
+INTEGRANTE 3 — Consultas Avançadas, Atendimentos e Script de Seed
+--------------------------------------------------------------------------------
+
+Tarefas realizadas:
+[ ] Endpoints de Usuários (CRUD + paginação + busca parcial)
+[ ] Endpoints de Categorias (CRUD + paginação)
+[ ] Endpoints de Status (CRUD + paginação)
+[ ] Endpoints de Atendimentos (CRUD + Many-to-Many + paginação)
+[ ] Consultas avançadas no MongoDB (app/routes/complaints.py):
+    [ ] GET /denuncias/busca/texto     (full-text search)
+    [ ] GET /denuncias/busca/por-data  (filtro $gte/$lte)
+    [ ] GET /denuncias/agregacoes/por-bairro   (aggregation $group)
+    [ ] GET /denuncias/agregacoes/por-categoria ($lookup multi-coleção)
+    [ ] GET /denuncias/agregacoes/por-status   ($lookup multi-coleção)
+    [ ] GET /denuncias/agregacoes/detalhado    (join 4 coleções + filtro ano)
+[ ] Script scripts/seed_data.py com Faker pt_BR (≥ 100 registros/entidade)
+[ ] README.md com diagrama Mermaid e instruções de execução
+
+Observações:
+___________________________________________________________________________
+___________________________________________________________________________
+
+================================================================================
+  Checklist Final (a ser preenchido em conjunto)
+================================================================================
+
+[ ] Todos os endpoints de listagem usam fastapi-pagination
+[ ] Relacionamentos One-to-Many implementados e testados
+[ ] Relacionamento Many-to-Many implementado (Denúncia <-> Atendimento)
+[ ] Upload/download via MinIO funcionando (docker compose up)
+[ ] Seed executado com sucesso (≥ 100 registros por entidade)
+[ ] Documentação automática acessível em http://localhost:8000/docs
+[ ] README revisado por todos os integrantes
+
+================================================================================
