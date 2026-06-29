@@ -4,8 +4,8 @@
 ================================================================================
 
 Integrante 1: Francisco Gabriel da Silva Lima
-Integrante 2: ______________________________
-Integrante 3: ______________________________
+Integrante 2: Jesse
+Integrante 3: Leonam
 
 --------------------------------------------------------------------------------
 INTEGRANTE 1 — Infraestrutura, Modelos e Configuração
